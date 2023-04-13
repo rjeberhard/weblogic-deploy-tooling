@@ -49,6 +49,7 @@ pipeline {
             }
         }
         stage ('Verify') {
+            /*
             when {
                 anyOf {
                     changeRequest()
@@ -56,6 +57,7 @@ pipeline {
                     tag "release-*"
                 }
             }
+            */
             agent {
                 docker {
                     alwaysPull true
