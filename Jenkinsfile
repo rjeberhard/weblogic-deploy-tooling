@@ -49,7 +49,6 @@ pipeline {
             }
         }
         stage ('Verify') {
-            /*
             when {
                 anyOf {
                     changeRequest()
@@ -57,7 +56,6 @@ pipeline {
                     tag "release-*"
                 }
             }
-            */
             agent {
                 docker {
                     alwaysPull true
@@ -103,6 +101,7 @@ pipeline {
                 build job: "${alias_test_job_name}"
             }
         }
+        */
         stage ('Save Nightly Installer'){
             when {
                 allOf {
@@ -116,25 +115,24 @@ pipeline {
                 '''
             }
         }
-        */
     }
 }
 
-void runSonarScanner() {
-    def changeUrl = env.GIT_URL.split("/")
-    def org = changeUrl[3]
-    def repo = changeUrl[4].substring(0, changeUrl[4].length() - 4)
-    if (env.CHANGE_ID != null) {
-        sh "mvn -B sonar:sonar \
-            -Dsonar.projectKey=${org}_${repo} \
-            -Dsonar.pullrequest.provider=GitHub \
-            -Dsonar.pullrequest.github.repository=${org}/${repo} \
-            -Dsonar.pullrequest.key=${env.CHANGE_ID} \
-            -Dsonar.pullrequest.branch=${env.CHANGE_BRANCH} \
-            -Dsonar.pullrequest.base=${env.CHANGE_TARGET}"
-    } else {
-       sh "mvn -B sonar:sonar \
-           -Dsonar.projectKey=${org}_${repo} \
-           -Dsonar.branch.name=${env.BRANCH_NAME}"
-    }
-}
+// void runSonarScanner() {
+//     def changeUrl = env.GIT_URL.split("/")
+//     def org = changeUrl[3]
+//     def repo = changeUrl[4].substring(0, changeUrl[4].length() - 4)
+//     if (env.CHANGE_ID != null) {
+//         sh "mvn -B sonar:sonar \
+//             -Dsonar.projectKey=${org}_${repo} \
+//             -Dsonar.pullrequest.provider=GitHub \
+//             -Dsonar.pullrequest.github.repository=${org}/${repo} \
+//             -Dsonar.pullrequest.key=${env.CHANGE_ID} \
+//             -Dsonar.pullrequest.branch=${env.CHANGE_BRANCH} \
+//             -Dsonar.pullrequest.base=${env.CHANGE_TARGET}"
+//     } else {
+//        sh "mvn -B sonar:sonar \
+//            -Dsonar.projectKey=${org}_${repo} \
+//            -Dsonar.branch.name=${env.BRANCH_NAME}"
+//     }
+// }
