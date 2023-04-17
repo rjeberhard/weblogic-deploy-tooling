@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        wdt_tenancy = ${env.WKT_TENANCY}
+        wdt_tenancy = "${env.WKT_TENANCY}"
         alias_test_job_name = 'wdt-alias-test-verify'
         jenkins_uid = sh(returnStdout: true, script: 'id -u').trim()
         jenkins_gid = sh(returnStdout: true, script: 'id -g').trim()
