@@ -3,6 +3,9 @@ pipeline {
 
     environment {
         alias_test_job_name = 'wdt-alias-test-verify'
+        jenkins_uid = sh(returnStdout: true, script: 'id -u').trim()
+        jenkins_gid = sh(returnStdout: true, script: 'id -g').trim()
+        docker_gid = sh(returnStdout: true, script: 'getent group docker | cut -d: -f3').trim()
     }
     triggers {
         // timer trigger for "nightly build" on main branch
@@ -36,7 +39,7 @@ pipeline {
                     alwaysPull true
                     reuseNode true
                     image 'phx.ocir.io/devweblogic/wdt/jenkins-slave:122130'
-                    args '-u opc -v /var/run/docker.sock:/var/run/docker.sock'
+                    args "-u ${jenkins_uid}:${jenkins_gid} --group-add oracle --group-add opc -v /var/run/docker.sock:/var/run/docker.sock"
                 }
             }
             steps {
@@ -60,32 +63,12 @@ pipeline {
                 docker {
                     alwaysPull true
                     reuseNode true
-                    image 'phx.ocir.io/devweblogic/wdt/jenkins-slave:122130'
-                    args '-u opc -v /var/run/docker.sock:/var/run/docker.sock'
+                    image "phx.ocir.io/{env.WKT_TENANCY}/wdt/jenkins-slave:122130"
+                    args "-u ${jenkins_uid}:${docker_gid} --group-add oracle --group-add opc --group-add docker -v /var/run/docker.sock:/var/run/docker.sock"
                 }
             }
             steps {
                 sh 'mvn -DskipITs=false -Dmw_home=${ORACLE_HOME} -Ddb.use.container.network=true install'
-            }
-        }
-        /*
-        stage ('Analyze') {
-            when {
-                anyOf {
-                    changeRequest()
-                    branch "main"
-                }
-            }
-            tools {
-                maven 'maven-3.8.7'
-                jdk 'jdk11'
-            }
-            steps {
-                withSonarQubeEnv('SonarCloud') {
-                    withCredentials([string(credentialsId: 'encj_github_token', variable: 'GITHUB_TOKEN')]) {
-                        runSonarScanner()
-                    }
-                }
             }
         }
         stage ('Alias Test') {
@@ -101,7 +84,6 @@ pipeline {
                 build job: "${alias_test_job_name}"
             }
         }
-        */
         stage ('Save Nightly Installer'){
             when {
                 allOf {
@@ -111,28 +93,11 @@ pipeline {
             }
             steps {
                 sh '''
-                    oci os object put --namespace=devweblogic --bucket-name=wko-system-test-files --config-file=/dev/null --auth=instance_principal --force --file=installer/target/weblogic-deploy.zip --name=weblogic-deploy-main.zip
+                    oci os object put --namespace=${env.WKT_TENANCY} --bucket-name=wko-system-test-files \
+                        --config-file=/dev/null --auth=instance_principal --force \
+                        --file=installer/target/weblogic-deploy.zip --name=weblogic-deploy-main.zip
                 '''
             }
         }
     }
 }
-
-// void runSonarScanner() {
-//     def changeUrl = env.GIT_URL.split("/")
-//     def org = changeUrl[3]
-//     def repo = changeUrl[4].substring(0, changeUrl[4].length() - 4)
-//     if (env.CHANGE_ID != null) {
-//         sh "mvn -B sonar:sonar \
-//             -Dsonar.projectKey=${org}_${repo} \
-//             -Dsonar.pullrequest.provider=GitHub \
-//             -Dsonar.pullrequest.github.repository=${org}/${repo} \
-//             -Dsonar.pullrequest.key=${env.CHANGE_ID} \
-//             -Dsonar.pullrequest.branch=${env.CHANGE_BRANCH} \
-//             -Dsonar.pullrequest.base=${env.CHANGE_TARGET}"
-//     } else {
-//        sh "mvn -B sonar:sonar \
-//            -Dsonar.projectKey=${org}_${repo} \
-//            -Dsonar.branch.name=${env.BRANCH_NAME}"
-//     }
-// }
