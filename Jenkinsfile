@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     environment {
+        wdt_tenancy = ${env.WKT_TENANCY}
         alias_test_job_name = 'wdt-alias-test-verify'
         jenkins_uid = sh(returnStdout: true, script: 'id -u').trim()
         jenkins_gid = sh(returnStdout: true, script: 'id -g').trim()
@@ -63,7 +64,7 @@ pipeline {
                 docker {
                     alwaysPull true
                     reuseNode true
-                    image "phx.ocir.io/{env.WKT_TENANCY}/wdt/jenkins-slave:122130"
+                    image "phx.ocir.io/${wdt_tenancy}/wdt/jenkins-slave:122130"
                     args "-u ${jenkins_uid}:${docker_gid} --group-add oracle --group-add opc --group-add docker -v /var/run/docker.sock:/var/run/docker.sock"
                 }
             }
@@ -93,7 +94,7 @@ pipeline {
             }
             steps {
                 sh '''
-                    oci os object put --namespace=${env.WKT_TENANCY} --bucket-name=wko-system-test-files \
+                    oci os object put --namespace=${wdt_tenancy} --bucket-name=wko-system-test-files \
                         --config-file=/dev/null --auth=instance_principal --force \
                         --file=installer/target/weblogic-deploy.zip --name=weblogic-deploy-main.zip
                 '''
