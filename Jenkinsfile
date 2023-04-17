@@ -44,7 +44,7 @@ pipeline {
                 }
             }
             steps {
-                sh 'mvn -Dunit-test-wlst-dir=${WLST_DIR} test'
+                sh 'mvn -X -Dunit-test-wlst-dir=${WLST_DIR} test'
             }
             post {
                 always {
