@@ -3,6 +3,8 @@ Copyright (c) 2020, 2022, Oracle Corporation and/or its affiliates.
 Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
 """
 
+import os
+
 from java.io import IOException
 from java.lang import Long
 from java.lang import NumberFormatException
@@ -71,6 +73,11 @@ class ModelConfiguration(object):
         Load the properties from the tools.properties file and save the resulting dictionary
         :return:
         """
+        print("WLST ENV VARS")
+        print("  *** WDT_CUSTOM_CONFIG: " + str(os.environ.get('WDT_CUSTOM_CONFIG', None)))
+        for name, value in os.environ.iteritems():
+            print("  WLST ENV: " + str(name) + ' ' + str(value))
+
         self._program_name = program_name
         self.__config_dict = _load_properties_file()
 
