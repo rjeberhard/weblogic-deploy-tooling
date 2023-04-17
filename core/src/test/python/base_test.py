@@ -23,7 +23,7 @@ class BaseTestCase(unittest.TestCase):
         self.TEST_OUTPUT_DIR = os.path.abspath(os.getcwd() + '/../../unit-tests')
         self.log_levels = {}
 
-        self.original_config_dir = os.environ['WDT_CUSTOM_CONFIG']
+        self.original_config_dir = os.environ.get('WDT_CUSTOM_CONFIG', None)
         # config items may need to be copied from here
         self.INSTALLER_LIB_DIR = os.path.abspath(self.TEST_CLASSES_DIR + '/../../../installer/src/main/lib')
 
