@@ -57,7 +57,7 @@ pipeline {
                                  file(credentialsId: "${oci_signing_key_creds}", variable: 'OCI_SIGNING_KEY')]) {
                     sh "mkdir -p ${jenkins_home_directory}/.oci"
                     sh "sed -e \"__jenkins_home_directory__:${jenkins_home_directory}:g\" \"\$OCI_CONFIG_FILE\" > ${jenkins_home_directory}/.oci/config"
-                    sh "cp \"\$OCI_SIGNING_KEY\" ${jenkins_home_directory}/.oci/"
+                    sh "cp \"\$OCI_SIGNING_KEY\" ${jenkins_home_directory}/.oci/oci-signing-key.pem"
                 }
                 withMaven(globalMavenSettingsConfig: 'wkt-maven-settings-xml', publisherStrategy: 'EXPLICIT') {
                     // In 2 JDK images, JAVA_HOME is set to JDK8 in /u01/maven-jdk and JDK7 is in /u01/jdk.
