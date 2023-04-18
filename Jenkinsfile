@@ -69,7 +69,7 @@ pipeline {
                 }
             }
             steps {
-                sh 'mvn -DskipITs=false -Dmw_home=${ORACLE_HOME} -Ddb.use.container.network=true install'
+                sh 'mvn -DskipTests -DskipITs=false -Dmw_home=${ORACLE_HOME} -Ddb.use.container.network=true install'
             }
         }
         stage ('Alias Test') {
