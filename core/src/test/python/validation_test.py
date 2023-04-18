@@ -2,32 +2,27 @@
 Copyright (c) 2017, 2023, Oracle Corporation and/or its affiliates.
 Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
 """
+import os
 import shutil
 import unittest
-import os
-from java.util.logging import Level
 
+from java.util.logging import Level
 from oracle.weblogic.deploy.logging import SummaryHandler
 from oracle.weblogic.deploy.logging import WLSDeployLogEndHandler
+from oracle.weblogic.deploy.util import TranslateException
 
 from base_test import BaseTestCase
-from wlsdeploy.aliases.aliases import Aliases
-from wlsdeploy.logging.platform_logger import PlatformLogger
-from wlsdeploy.util.weblogic_helper import WebLogicHelper
-from wlsdeploy.util.model_translator import FileToPython
-from wlsdeploy.util.model_context import ModelContext
-
-from wlsdeploy.tool.validate.validator import Validator
-from wlsdeploy.tool.validate import validation_utils
-from wlsdeploy.aliases.wlst_modes import WlstModes
-from wlsdeploy.aliases import alias_constants
-
 from validate import __perform_model_file_validation
-
-import oracle.weblogic.deploy.util.TranslateException as TranslateException
-import oracle.weblogic.deploy.validate.ValidateException as ValidateException
-
+from wlsdeploy.aliases import alias_constants
+from wlsdeploy.aliases.aliases import Aliases
+from wlsdeploy.aliases.wlst_modes import WlstModes
+from wlsdeploy.logging.platform_logger import PlatformLogger
 from wlsdeploy.tool.create import wlsroles_helper
+from wlsdeploy.tool.validate import validation_utils
+from wlsdeploy.tool.validate.validator import Validator
+from wlsdeploy.util.model_context import ModelContext
+from wlsdeploy.util.model_translator import FileToPython
+from wlsdeploy.util.weblogic_helper import WebLogicHelper
 
 
 class ValidationTestCase(BaseTestCase):
