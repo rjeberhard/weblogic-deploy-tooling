@@ -81,7 +81,7 @@ pipeline {
                 //
                 sh '''
                     export MAVEN_OPTS
-                    mvn -B -DskipTests -DskipITs=false -Dmw_home=${ORACLE_HOME} -Ddb.use.container.network=true install
+                    mvn -B -DskipITs=false -Dmw_home=${ORACLE_HOME} -Ddb.use.container.network=true install
                 '''
             }
         }
