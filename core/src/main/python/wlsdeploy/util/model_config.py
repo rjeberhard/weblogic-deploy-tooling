@@ -3,8 +3,6 @@ Copyright (c) 2020, 2022, Oracle Corporation and/or its affiliates.
 Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
 """
 
-import os
-
 from java.io import IOException
 from java.lang import Long
 from java.lang import NumberFormatException
