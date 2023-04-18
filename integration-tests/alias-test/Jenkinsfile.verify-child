@@ -58,7 +58,7 @@ pipeline {
                     sh "cp \"\$OCI_SIGNING_KEY\" ${jenkins_home_directory}/.oci/oci-signing-key.pem"
                 }
                 withMaven(globalMavenSettingsConfig: 'wkt-maven-settings-xml', publisherStrategy: 'EXPLICIT') {
-                    sh "pushd integration-tests/alias-test/verify && mvn verify -DskipTests=true -Dalias-test-skipITs=false -Dskip-wdt-install=true -Dalias_test_oci_profile=${oci_profile} -Dwls_version=${wls_version} && popd"
+                    sh "pushd integration-tests/alias-test/verify && mvn -B verify -DskipTests=true -Dalias-test-skipITs=false -Dskip-wdt-install=true -Dalias_test_oci_profile=${oci_profile} -Dwls_version=${wls_version} && popd"
                 }
             }
             post {
