@@ -7,7 +7,6 @@ pipeline {
         jenkins_uid = sh(returnStdout: true, script: 'id -u').trim()
         jenkins_gid = sh(returnStdout: true, script: 'id -g').trim()
         docker_gid = sh(returnStdout: true, script: 'getent group docker | cut -d: -f3').trim()
-        MAVEN_OPTS = '-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn'
     }
     triggers {
         // timer trigger for "nightly build" on main branch
@@ -33,7 +32,7 @@ pipeline {
                 // Using Maven batch mode to suppress download progress lines in Jenkins output
                 //
                 withMaven(globalMavenSettingsConfig: 'wkt-maven-settings-xml', publisherStrategy: 'EXPLICIT') {
-                    sh "MAVEN_OPTS=${MAVEN_OPTS} mvn -B -DskipTests clean package"
+                    sh "mvn -B -DskipTests clean package"
                 }
             }
         }
@@ -49,10 +48,7 @@ pipeline {
             steps {
                 // Using Maven batch mode to suppress download progress lines in Jenkins output
                 //
-                sh '''
-                    export MAVEN_OPTS
-                    mvn -B -X -Dunit-test-wlst-dir=${WLST_DIR} test
-                '''
+                sh 'mvn -B -Dunit-test-wlst-dir=${WLST_DIR} test'
             }
             post {
                 always {
@@ -79,10 +75,7 @@ pipeline {
             steps {
                 // Using Maven batch mode to suppress download progress lines in Jenkins output
                 //
-                sh '''
-                    export MAVEN_OPTS
-                    mvn -B -DskipITs=false -Dmw_home=${ORACLE_HOME} -Ddb.use.container.network=true install
-                '''
+                sh 'mvn -B -DskipITs=false -Dmw_home=${ORACLE_HOME} -Ddb.use.container.network=true install'
             }
         }
         stage ('Alias Test') {

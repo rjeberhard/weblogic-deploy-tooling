@@ -73,11 +73,6 @@ class ModelConfiguration(object):
         Load the properties from the tools.properties file and save the resulting dictionary
         :return:
         """
-        print("WLST ENV VARS")
-        print("  *** WDT_CUSTOM_CONFIG: " + str(os.environ.get('WDT_CUSTOM_CONFIG', None)))
-        for name, value in os.environ.iteritems():
-            print("  WLST ENV: " + str(name) + ' ' + str(value))
-
         self._program_name = program_name
         self.__config_dict = _load_properties_file()
 
